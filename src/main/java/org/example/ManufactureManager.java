@@ -32,7 +32,6 @@ class ManufactureManager {
     public void printReport() {
         // Using counters for each outcome.
         Map<String, Integer> successCount = new HashMap<>();
-        Map<String, Integer> failureCount = new HashMap<>();
 
         // For successful manufacturing, also compute total cost and weight.
         Map<String, Double> totalCost = new HashMap<>();
