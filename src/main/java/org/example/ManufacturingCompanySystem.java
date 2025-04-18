@@ -2,6 +2,8 @@ package org.example;
 
 import java.util.*;
 
+
+
 // ================================================================
 // UML CLASS DIAGRAM (Description)
 // ---------------------------------------------------------------
@@ -58,58 +60,46 @@ import java.util.*;
 // (Additional helper classes and methods for CSV data simulation and random manufacturing outcomes)
 // ================================================================
 
-public class ManufacturingCompanySystem  {
-
+// ManufacturingCompanySystem.java
+public class ManufacturingCompanySystem {
     public static void main(String[] args) {
-        // Load components from CSV and add them to Inventory.
+        // load components and add to inventory
         List<BasicComponent> components = CSVLoader.loadComponents("components.csv");
-        Inventory inventory = Inventory.getInstance();
-        for (BasicComponent comp : components) {
-            inventory.addComponent(comp);
-        }
+        Inventory inv = Inventory.getInstance();
+        components.forEach(inv::addComponent);
 
-        // Load products from CSV.
-        List<Product> productList = CSVLoader.loadProducts("products.csv");
+        // load products
+        List<Product> products = CSVLoader.loadProducts("products.csv");
 
-        // Create a ManufactureManager to record manufacturing processes.
+        // manage processes
         ManufactureManager manager = new ManufactureManager();
+        Map<Product,Integer> remaining = new LinkedHashMap<>();
+        products.forEach(p -> remaining.put(p, p.getQuantity()));
 
-        // Create a mapping to keep track of remaining units per product (preserving CSV order).
-        Map<Product, Integer> remainingUnits = new LinkedHashMap<>();
-        for (Product product : productList) {
-            remainingUnits.put(product, product.getQuantity());
-        }
-
-        // Process manufacturing in a round-robin manner until all units are attempted.
-        boolean allProductsCompleted = false;
-        while (!allProductsCompleted) {
-            allProductsCompleted = true;
-            for (Product product : productList) {
-                int remaining = remainingUnits.get(product);
-                if (remaining > 0) {
-                    // Attempt to manufacture one unit.
-                    ManufacturingProcess process = new ManufacturingProcess(product);
-                    process.processManufacturing();
-                    manager.addProcess(process);
-
-                    // Decrement the count for this product.
-                    remainingUnits.put(product, remaining - 1);
-
-                    // At least one unit was processed, so we're not done.
-                    allProductsCompleted = false;
+        // round‑robin manufacturing
+        boolean done = false;
+        while (!done) {
+            done = true;
+            for (Product prod : products) {
+                int left = remaining.get(prod);
+                if (left > 0) {
+                    ManufacturingProcess proc = new ManufacturingProcess(prod);
+                    proc.processManufacturing();
+                    manager.addProcess(proc);
+                    remaining.put(prod, left - 1);
+                    done = false;
                 }
             }
         }
 
-        // Print component details and manufacturing states.
+        // print inventory and states
         System.out.println("=== COMPONENT DETAILS AND MANUFACTURING STATES ===");
-        Inventory.getInstance().printInventory();
+        inv.printInventory();
         manager.printProcessDetails();
-        
 
-        // Print the final report.
+        // print final report
         System.out.println("\n=== FINAL REPORT ===");
-        manager.printReport();
+        new ReportGenerator(manager.getProcesses()).printReport();
     }
 }
 
