@@ -103,7 +103,9 @@ public class ManufacturingCompanySystem  {
 
         // Print component details and manufacturing states.
         System.out.println("=== COMPONENT DETAILS AND MANUFACTURING STATES ===");
+        Inventory.getInstance().printInventory();
         manager.printProcessDetails();
+        
 
         // Print the final report.
         System.out.println("\n=== FINAL REPORT ===");
