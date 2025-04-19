@@ -15,6 +15,7 @@ public class InManufacturingState implements ManufacturingState {
         int outcome = new Random().nextInt(3) + 1;
         if (outcome == 1) {
             proc.setState(new CompletedState());
+            proc.proceed();
         } else if (outcome == 2) {
             proc.setFailureType(FailureType.SYSTEM_ERROR);
             proc.setState(new FailedState());

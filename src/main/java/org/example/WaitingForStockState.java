@@ -12,7 +12,7 @@ public class WaitingForStockState implements ManufacturingState {
         Inventory inv   = Inventory.getInstance();
         boolean ok = true;
         for (Map.Entry<String, Double> e : product.getRequirements().entrySet()) {
-            BasicComponent comp = inv.getComponent(e.getKey());
+            BasicComponent comp = (BasicComponent) inv.getComponent(e.getKey());
             if (comp == null || comp.getStockQuantity() < e.getValue()) {
                 ok = false;
                 break;
@@ -23,7 +23,7 @@ public class WaitingForStockState implements ManufacturingState {
             proc.setState(new FailedState());
         } else {
             product.getRequirements()
-                   .forEach((name, qty) -> inv.updateStock(name, qty));
+                   .forEach((name, qty) -> inv.removeStock(name, qty));
             proc.setState(new InManufacturingState());
         }
     }

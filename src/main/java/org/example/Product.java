@@ -6,11 +6,11 @@ import java.util.Map;
  * Product class (composite) represents a manufactured product made up
  * of basic components. It uses a Map to store required components and their amounts.
  */
-class Product implements Component {
+public class Product implements Component {
     private String name;
     // Mapping of component name (to fetch from Inventory) and required quantity per one unit of product.
     private Map<String, Double> requirements;
-    private int quantity; // number of this product to manufacture
+    private double quantity; // number of this product to manufacture
 
     public Product(String name, Map<String, Double> requirements, int quantity) {
         this.name = name;
@@ -26,9 +26,21 @@ class Product implements Component {
         return requirements;
     }
 
-    public int getQuantity() {
+    public double getQuantity() {
         return quantity;
     }
+
+    public void setQuantity(double quantity) {
+        this.quantity = quantity;
+    } 
+
+    public void increaseQuantity() {
+        this.quantity += 1;
+    } 
+
+    public void decreaseQuantity(double quantityUsed) {
+        this.quantity -= quantityUsed;
+    } 
 
     // Compute the total cost for one unit (summing over components).
     @Override
@@ -36,7 +48,7 @@ class Product implements Component {
         double total = 0.0;
         Inventory inventory = Inventory.getInstance();
         for (Map.Entry<String, Double> entry : requirements.entrySet()) {
-            BasicComponent component = inventory.getComponent(entry.getKey());
+            BasicComponent component = (BasicComponent)inventory.getComponent(entry.getKey());
             if (component != null) {
                 total += component.getUnitCost() * entry.getValue();
             }
@@ -50,7 +62,7 @@ class Product implements Component {
         double total = 0.0;
         Inventory inventory = Inventory.getInstance();
         for (Map.Entry<String, Double> entry : requirements.entrySet()) {
-            BasicComponent component = inventory.getComponent(entry.getKey());
+            BasicComponent component = (BasicComponent)inventory.getComponent(entry.getKey());
             if (component != null) {
                 total += component.getUnitWeight() * entry.getValue();
             }
@@ -60,11 +72,33 @@ class Product implements Component {
 
     @Override
     public void printDetail() {
-        System.out.println("Product: " + name + " | Quantity to Manufacture: " + quantity);
-        System.out.println("Requirements:");
-        for (Map.Entry<String, Double> entry : requirements.entrySet()) {
-            System.out.println("  - " + entry.getKey() + ": " + entry.getValue());
-        }
-        System.out.println("Total Cost (per unit): " + getTotalCost() + " | Total Weight (per unit): " + getTotalWeight());
+        System.out.println("Product: " + name + " | Unit Cost: " + getTotalCost()+ " | Unit Weight: " + getTotalWeight() + " | Stock: " + quantity );
     }
+
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Product: ")
+        .append(name)
+        .append(" | Quantity to Manufacture: ")
+        .append(quantity)
+        .append("\nRequirements:\n");
+        
+        for (Map.Entry<String, Double> entry : requirements.entrySet()) {
+            sb.append("  - ")
+            .append(entry.getKey())
+            .append(": ")
+            .append(entry.getValue())
+            .append("\n");
+        }
+        
+        sb.append("Total Cost (per unit): ")
+        .append(getTotalCost())
+        .append(" | Total Weight (per unit): ")
+        .append(getTotalWeight());
+        
+        return sb.toString();
+    }
+
 }

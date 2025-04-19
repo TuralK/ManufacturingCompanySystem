@@ -67,21 +67,20 @@ public class ManufacturingCompanySystem {
         List<BasicComponent> components = CSVLoader.loadComponents("components.csv");
         Inventory inv = Inventory.getInstance();
         components.forEach(inv::addComponent);
-
         // load products
         List<Product> products = CSVLoader.loadProducts("products.csv");
 
         // manage processes
         ManufactureManager manager = new ManufactureManager();
-        Map<Product,Integer> remaining = new LinkedHashMap<>();
+        Map<Product,Double> remaining = new LinkedHashMap<>();
         products.forEach(p -> remaining.put(p, p.getQuantity()));
-
+        products.forEach(p -> p.setQuantity(0));
         // round‑robin manufacturing
         boolean done = false;
         while (!done) {
             done = true;
             for (Product prod : products) {
-                int left = remaining.get(prod);
+                double left = remaining.get(prod);
                 if (left > 0) {
                     ManufacturingProcess proc = new ManufacturingProcess(prod);
                     proc.processManufacturing();

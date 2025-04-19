@@ -31,6 +31,10 @@ public class ManufacturingProcess {
         this.state = state;
     }
 
+    public void proceed() {
+        state.proceed(this);
+    }
+
     public void processManufacturing() {
         state.proceed(this);
         if (state instanceof InManufacturingState) {

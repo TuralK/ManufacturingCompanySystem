@@ -3,7 +3,7 @@ package org.example;
 /**
  * BasicComponent represents raw materials, paints, or hardware.
  */
-class BasicComponent implements Component {
+public class BasicComponent implements Component {
     private String name;
     private double unitCost;
     private double unitWeight;
@@ -39,9 +39,9 @@ class BasicComponent implements Component {
     }
 
     // Deduct from stock (if manufacturing uses this component).
-    public void updateStock(double quantityUsed) {
-        this.stockQuantity -= quantityUsed;
-    }
+    public void decreaseQuantity(double quantityUsed) {
+        this.stockQuantity = Math.round((this.stockQuantity - quantityUsed) * 100.0) / 100.0;
+    }    
 
     @Override
     public double getTotalCost() {

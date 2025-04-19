@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * CSVLoader provides static methods to load components and products from CSV files.
  */
-class CSVLoader {
+public class CSVLoader {
 
     // Loads components from a CSV file located in the resources folder.
     public static List<BasicComponent> loadComponents(String filename) {
