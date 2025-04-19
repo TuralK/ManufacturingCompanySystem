@@ -63,42 +63,9 @@ import java.util.*;
 // ManufacturingCompanySystem.java
 public class ManufacturingCompanySystem {
     public static void main(String[] args) {
-        // load components and add to inventory
-        List<BasicComponent> components = CSVLoader.loadComponents("components.csv");
-        Inventory inv = Inventory.getInstance();
-        components.forEach(inv::addComponent);
-        // load products
-        List<Product> products = CSVLoader.loadProducts("products.csv");
-
-        // manage processes
-        ManufactureManager manager = new ManufactureManager();
-        Map<Product,Double> remaining = new LinkedHashMap<>();
-        products.forEach(p -> remaining.put(p, p.getQuantity()));
-        products.forEach(p -> p.setQuantity(0));
-        // round‑robin manufacturing
-        boolean done = false;
-        while (!done) {
-            done = true;
-            for (Product prod : products) {
-                double left = remaining.get(prod);
-                if (left > 0) {
-                    ManufacturingProcess proc = new ManufacturingProcess(prod);
-                    proc.processManufacturing();
-                    manager.addProcess(proc);
-                    remaining.put(prod, left - 1);
-                    done = false;
-                }
-            }
-        }
-
-        // print inventory and states
-        System.out.println("=== COMPONENT DETAILS AND MANUFACTURING STATES ===");
-        inv.printInventory();
-        manager.printProcessDetails();
-
-        // print final report
-        System.out.println("\n=== FINAL REPORT ===");
-        new ReportGenerator(manager.getProcesses()).printReport();
+        ManufacturingCompanyController controller = new ManufacturingCompanyController();
+        controller.runManufacturingProcesses();
+        controller.printResults();
     }
 }
 
