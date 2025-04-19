@@ -2,6 +2,7 @@ package org.example;
 
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 /**
@@ -17,7 +18,12 @@ public class ManufacturingCompanyController {
     ManufacturingCompanyController() {
         List<BasicComponent> components = CSVLoader.loadComponents("components.csv");
         components.forEach(inventory::addComponent);
-        products = CSVLoader.loadProducts("products.csv");
+
+        Map<String, Component> componentLookup = new HashMap<>();
+        for (BasicComponent comp : components) {
+            componentLookup.put(comp.getName(), comp);
+        }
+        products = CSVLoader.loadProducts("products.csv", componentLookup);
     }
 
     public void runManufacturingProcesses() {

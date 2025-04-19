@@ -9,10 +9,10 @@ import java.util.Map;
 public class Product implements Component {
     private String name;
     // Mapping of component name (to fetch from Inventory) and required quantity per one unit of product.
-    private Map<String, Double> requirements;
+    private Map<Component, Double> requirements;
     private double quantity; // number of this product to manufacture
 
-    public Product(String name, Map<String, Double> requirements, int quantity) {
+    public Product(String name, Map<Component, Double> requirements, int quantity) {
         this.name = name;
         this.requirements = requirements;
         this.quantity = quantity;
@@ -22,7 +22,7 @@ public class Product implements Component {
         return name;
     }
 
-    public Map<String, Double> getRequirements() {
+    public Map<Component, Double> getRequirements() {
         return requirements;
     }
 
@@ -46,9 +46,8 @@ public class Product implements Component {
     @Override
     public double getTotalCost() {
         double total = 0.0;
-        Inventory inventory = Inventory.getInstance();
-        for (Map.Entry<String, Double> entry : requirements.entrySet()) {
-            BasicComponent component = (BasicComponent)inventory.getComponent(entry.getKey());
+        for (Map.Entry<Component, Double> entry : requirements.entrySet()) {
+            BasicComponent component = (BasicComponent) entry.getKey();
             if (component != null) {
                 total += component.getUnitCost() * entry.getValue();
             }
@@ -60,9 +59,8 @@ public class Product implements Component {
     @Override
     public double getTotalWeight() {
         double total = 0.0;
-        Inventory inventory = Inventory.getInstance();
-        for (Map.Entry<String, Double> entry : requirements.entrySet()) {
-            BasicComponent component = (BasicComponent)inventory.getComponent(entry.getKey());
+        for (Map.Entry<Component, Double> entry : requirements.entrySet()) {
+            BasicComponent component = (BasicComponent) entry.getKey();
             if (component != null) {
                 total += component.getUnitWeight() * entry.getValue();
             }
@@ -85,9 +83,9 @@ public class Product implements Component {
         .append(quantity)
         .append("\nRequirements:\n");
         
-        for (Map.Entry<String, Double> entry : requirements.entrySet()) {
+        for (Map.Entry<Component, Double> entry : requirements.entrySet()) {
             sb.append("  - ")
-            .append(entry.getKey())
+            .append(entry.getKey().getName())
             .append(": ")
             .append(entry.getValue())
             .append("\n");
