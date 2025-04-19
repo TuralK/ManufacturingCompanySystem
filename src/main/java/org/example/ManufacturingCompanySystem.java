@@ -56,8 +56,21 @@ package org.example;
 // (Additional helper classes and methods for CSV data simulation and random manufacturing outcomes)
 // ================================================================
 
-// ManufacturingCompanySystem.java
+/**
+ * Entry point of the Manufacturing Company System.
+ * <p>
+ * This class initializes and coordinates the {@link ManufacturingCompanyController} 
+ * by running all manufacturing processes and printing the processes' results.
+ * </p>
+ */
 public class ManufacturingCompanySystem {
+   /**
+     * The main method that starts the manufacturing system.
+     * It initializes the {@link ManufacturingCompanyController}, 
+     * runs all the manufacturing processes and outputs the final results.
+     *
+     * @param args command-line arguments (not used)
+     */
     public static void main(String[] args) {
         ManufacturingCompanyController controller = new ManufacturingCompanyController();
         controller.runManufacturingProcesses();

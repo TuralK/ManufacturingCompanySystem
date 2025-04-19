@@ -3,16 +3,37 @@ package org.example;
 import java.util.Random;
 
 /**
- * InManufacturingState: Simulate manufacturing in progress.
- * Generates a random outcome:
- * 1 -> Successful manufacturing.
- * 2 -> Unsuccessful (system error).
- * 3 -> Unsuccessful (damaged component).
+ * Implements and represents a state that simulates a manufacturing in process.
+ * <p>
+ * This state simulates the state of a manufacturing process, where the outcome
+ * is determined randomly to reflect real-world uncertainties of system errors
+ * or damaged components.
+ * </p>
  */
 public class InManufacturingState implements ManufacturingState {
+    /**
+    * Simulates the manufacturing process by generating a random outcome.
+    * Depending on the result, transitions the {@link ManufacturingProcess}
+    * to either a successful or failed state, and sets the appropriate failure reason
+    * when applicable.
+    * 
+    * <p>
+    * The outcome state can be determined randomly in three ways:
+    * <ul>
+    *   <li><b>1</b> → Success: Transitions to {@link CompletedState}</li>
+    *   <li><b>2</b> — Failure due to a system error: Sets the {@link FailureType} to {@code SYSTEM_ERROR} and transitions to {@link FailedState}.</li>
+    *   <li><b>3</b> — Failure due to a damaged component: Sets the {@link FailureType} to {@code DAMAGED_COMPONENT} and transitions to {@link FailedState}.</li>
+    * </ul>
+    *</p>
+    * 
+    * If the outcome is a failure then the {@link FailureType} enum is also set to the appropriate
+    * enum type.
+    * 
+    * @param process the manufacturing process context being progressed
+    */
     @Override
     public void proceed(ManufacturingProcess proc) {
-        int outcome = new Random().nextInt(3) + 1;
+        int outcome = new Random().nextInt(3) + 1;  // Generates 1, 2 or 3.
         if (outcome == 1) {
             proc.setState(new CompletedState());
             proc.proceed();
