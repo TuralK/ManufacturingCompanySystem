@@ -16,6 +16,7 @@ public class ManufactureManager {
     }
 
     public void printProcessDetails() {
+        System.out.println("\n=== PRODUCT MANUFACTURING STATES ===");
         processes.forEach(p ->
             System.out.println("Product: " + p.getProduct().getName()
                 + " | State: " + p.getStateName()));

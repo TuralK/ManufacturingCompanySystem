@@ -55,7 +55,7 @@ public class BasicComponent implements Component {
 
     @Override
     public void printDetail() {
-        System.out.println("Component: " + name + " | Type: " + type + " | Unit Cost: " + unitCost
+        System.out.println("Basic Component: " + name + " | Type: " + type + " | Unit Cost: " + unitCost
                 + " | Unit Weight: " + unitWeight + " | Stock: " + stockQuantity);
     }
 }

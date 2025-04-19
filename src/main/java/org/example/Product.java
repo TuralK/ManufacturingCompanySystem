@@ -72,7 +72,7 @@ public class Product implements Component {
 
     @Override
     public void printDetail() {
-        System.out.println("Product: " + name + " | Unit Cost: " + getTotalCost()+ " | Unit Weight: " + getTotalWeight() + " | Stock: " + quantity );
+        System.out.println("Product: " + name + " | Unit Cost: " + getTotalCost() + " | Unit Weight: " + getTotalWeight() + " | Quantity to Manufacture: " + quantity );
     }
 
 

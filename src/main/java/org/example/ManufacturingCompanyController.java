@@ -42,7 +42,6 @@ public class ManufacturingCompanyController {
     }
 
     public void printResults() {
-        System.out.println("=== COMPONENT DETAILS AND MANUFACTURING STATES ===");
         inventory.printInventory();
         manager.printProcessDetails();
 

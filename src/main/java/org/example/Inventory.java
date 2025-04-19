@@ -38,7 +38,7 @@ public class Inventory {
 
     // Print details for all components.
     public void printInventory() {
-        System.out.println("=== INVENTORY DETAILS ===");
+        System.out.println("\n=== INVENTORY COMPONENT DETAILS ===");
         for (Component comp : components.values()) {
             comp.printDetail();
         }
