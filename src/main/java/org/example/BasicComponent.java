@@ -4,6 +4,7 @@ package org.example;
  * BasicComponent represents raw materials, paints, or hardware.
  */
 public class BasicComponent implements Component {
+
     private String name;
     private double unitCost;
     private double unitWeight;
@@ -41,7 +42,7 @@ public class BasicComponent implements Component {
     // Deduct from stock (if manufacturing uses this component).
     public void decreaseQuantity(double quantityUsed) {
         this.stockQuantity = Math.round((this.stockQuantity - quantityUsed) * 100.0) / 100.0;
-    }    
+    }
 
     @Override
     public double getTotalCost() {
@@ -55,8 +56,7 @@ public class BasicComponent implements Component {
 
     @Override
     public void printDetail() {
-        System.out.println("Basic Component: " + name + " | Type: " + type + " | Unit Cost: " + unitCost
-                + " | Unit Weight: " + unitWeight + " | Stock: " + stockQuantity);
+        System.out.printf("Basic Component: %-20s | Type: %-14s | Unit Cost: %8.1f | Unit Weight: %6.2f | Stock: %6.1f%n",
+                name, type, unitCost, unitWeight, stockQuantity);
     }
 }
-

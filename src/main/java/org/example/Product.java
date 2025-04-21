@@ -3,13 +3,14 @@ package org.example;
 import java.util.Map;
 
 /**
- * Product class (composite) represents a manufactured product made up
- * of basic components. It uses a Map to store required components and their amounts.
+ * Product class (composite) represents a manufactured product made up of basic
+ * components. It uses a Map to store required components and their amounts.
  */
 public class Product implements Component {
-    private String name;
+
+    private final String name;
     // Mapping of component name (to fetch from Inventory) and required quantity per one unit of product.
-    private Map<Component, Double> requirements;
+    private final Map<Component, Double> requirements;
     private double quantity; // number of this product to manufacture
 
     public Product(String name, Map<Component, Double> requirements, int quantity) {
@@ -18,6 +19,7 @@ public class Product implements Component {
         this.quantity = quantity;
     }
 
+    @Override
     public String getName() {
         return name;
     }
@@ -32,25 +34,24 @@ public class Product implements Component {
 
     public void setQuantity(double quantity) {
         this.quantity = quantity;
-    } 
+    }
 
     public void increaseQuantity() {
         this.quantity += 1;
-    } 
+    }
 
+    @Override
     public void decreaseQuantity(double quantityUsed) {
         this.quantity -= quantityUsed;
-    } 
+    }
 
     // Compute the total cost for one unit (summing over components).
     @Override
     public double getTotalCost() {
         double total = 0.0;
         for (Map.Entry<Component, Double> entry : requirements.entrySet()) {
-            BasicComponent component = (BasicComponent) entry.getKey();
-            if (component != null) {
-                total += component.getUnitCost() * entry.getValue();
-            }
+            Component component = entry.getKey();
+            total += component.getTotalCost() * entry.getValue();
         }
         return total;
     }
@@ -60,9 +61,9 @@ public class Product implements Component {
     public double getTotalWeight() {
         double total = 0.0;
         for (Map.Entry<Component, Double> entry : requirements.entrySet()) {
-            BasicComponent component = (BasicComponent) entry.getKey();
+            Component component = entry.getKey();
             if (component != null) {
-                total += component.getUnitWeight() * entry.getValue();
+                total += component.getTotalWeight() * entry.getValue();
             }
         }
         return total;
@@ -70,32 +71,32 @@ public class Product implements Component {
 
     @Override
     public void printDetail() {
-        System.out.println("Product: " + name + " | Unit Cost: " + getTotalCost() + " | Unit Weight: " + getTotalWeight() + " | Quantity to Manufacture: " + quantity );
+        System.out.printf("Product: %-28s | Unit Cost: %9.1f | Unit Weight: %6.2f | Quantity : %7.1f%n",
+                name, getTotalCost(), getTotalWeight(), quantity);
     }
-
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Product: ")
-        .append(name)
-        .append(" | Quantity to Manufacture: ")
-        .append(quantity)
-        .append("\nRequirements:\n");
-        
+                .append(name)
+                .append(" | Quantity to Manufacture: ")
+                .append(quantity)
+                .append("\nRequirements:\n");
+
         for (Map.Entry<Component, Double> entry : requirements.entrySet()) {
             sb.append("  - ")
-            .append(entry.getKey().getName())
-            .append(": ")
-            .append(entry.getValue())
-            .append("\n");
+                    .append(entry.getKey().getName())
+                    .append(": ")
+                    .append(entry.getValue())
+                    .append("\n");
         }
-        
+
         sb.append("Total Cost (per unit): ")
-        .append(getTotalCost())
-        .append(" | Total Weight (per unit): ")
-        .append(getTotalWeight());
-        
+                .append(getTotalCost())
+                .append(" | Total Weight (per unit): ")
+                .append(getTotalWeight());
+
         return sb.toString();
     }
 
