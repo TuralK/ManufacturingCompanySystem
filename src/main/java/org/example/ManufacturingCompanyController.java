@@ -1,57 +1,78 @@
+/**
+ * src/main/java/org/example/ManufacturingCompanyController.java
+ */
 package org.example;
 
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.stream.Collectors;
 
 /**
- * ManufacturingCompanyController is the controller for 
- * loading component/product, managing the manufacturing process and
- * printing the inventory and manufacturing status within a company.
+ * Acts as the central orchestration component for the manufacturing application.
+ * 
+ * <p>
+ * Responsibilities:
+ * <ul>
+ *   <li>Load raw materials and product definitions from CSV files.</li>
+ *   <li>Initialize inventory with loaded components.</li>
+ *   <li>Delegate manufacturing execution to ManufacturingService.</li>
+ *   <li>Delegate reporting to ReportService.</li>
+ * </ul>
+ * </p>
+ * 
+ * This class adheres to the Single Responsibility Principle by focusing solely on
+ * application flow and not on direct I/O or business logic implementation.
  */
 public class ManufacturingCompanyController {
-    private Inventory inventory = Inventory.getInstance();
-    private ManufactureManager manager = new ManufactureManager();
-    private List<Product> products;
+    private final CSVDataLoader loader;
+    private final Inventory inventory;
+    private final List<Product> products;
+    private final ManufacturingService service;
+    private final ReportService reporter;
 
-    ManufacturingCompanyController() {
-        List<BasicComponent> components = CSVLoader.loadComponents("components.csv");
-        components.forEach(inventory::addComponent);
+    /**
+     * Constructs the controller by loading data and preparing services.
+     *
+     * @param componentsCsv the filename (relative to resources) for component definitions
+     * @param productsCsv   the filename (relative to resources) for product definitions
+     */
+    public ManufacturingCompanyController(String componentsCsv, String productsCsv) {
+        // Initialize CSV loader with file names
+        this.loader    = new CSVDataLoader(componentsCsv, productsCsv);
+        // Retrieve the singleton inventory instance
+        this.inventory = Inventory.getInstance();
 
-        Map<String, Component> componentLookup = new HashMap<>();
-        for (BasicComponent comp : components) {
-            componentLookup.put(comp.getName(), comp);
-        }
-        products = CSVLoader.loadProducts("products.csv", componentLookup);
+        // Load basic components and register them into inventory
+        List<BasicComponent> comps = loader.loadComponents();
+        comps.forEach(inventory::addComponent);
+
+        // Build a lookup table for component name to Component instance
+        Map<String, Component> lookup = comps.stream()
+            .collect(Collectors.toMap(Component::getName, c -> c));
+        // Load products using the lookup for required components
+        this.products = loader.loadProducts(lookup);
+
+        // Initialize service and report handlers
+        this.service   = new ManufacturingService(inventory);
+        this.reporter  = new ReportService(inventory);
     }
 
-    public void runManufacturingProcesses() {
-        Map<Product, Double> remaining = new LinkedHashMap<>();
-        products.forEach(p -> remaining.put(p, (double)p.getQuantity()));
-        products.forEach(p -> p.setQuantity(0));
+    /**
+     * Executes the end-to-end manufacturing workflow:
+     * <ol>
+     *   <li>Run production on each product.</li>
+     *   <li>Print inventory details and process states.</li>
+     *   <li>Print final summary report.</li>
+     * </ol>
+     */
+    public void run() {
+        // Execute manufacturing processes for all products
+        List<ManufacturingProcess> processes = service.manufacture(products);
 
-        boolean done = false;
-        while (!done) {
-            done = true;
-            for (Product prod : products) {
-                double left = remaining.get(prod);
-                if (left > 0) {
-                    ManufacturingProcess proc = new ManufacturingProcess(prod);
-                    proc.processManufacturing();
-                    manager.addProcess(proc);
-                    remaining.put(prod, left - 1);
-                    done = false;
-                }
-            }
-        }
-    }
+        // Display current inventory levels and manufacturing states
+        reporter.printProcessDetails(service.getManager());
 
-    public void printResults() {
-        inventory.printInventory();
-        manager.printProcessDetails();
-
-        System.out.println("\n=== FINAL REPORT ===");
-        new ReportGenerator(manager.getProcesses()).printReport();
+        // Display a consolidated final report of successes and failures
+        reporter.printFinalReport(processes);
     }
 }

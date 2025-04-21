@@ -43,12 +43,6 @@ public class ManufacturingProcess {
     }
 
     public String getStateName() {
-        if (state instanceof CompletedState) {
-            return "Completed";
-        } else if (state instanceof FailedState) {
-            return "Failed (" + failureType + ")";
-        } else {
-            return state.getClass().getSimpleName();
-        }
+        return state.getStateName(this);
     }
 }

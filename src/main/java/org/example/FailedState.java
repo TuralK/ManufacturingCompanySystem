@@ -8,4 +8,9 @@ public class FailedState implements ManufacturingState {
     public void proceed(ManufacturingProcess process) {
         // No further processing needed.
     }
+
+    @Override
+    public String getStateName(ManufacturingProcess process) {
+        return "Failed (" + process.getFailureType() + ")";
+    }
 }

@@ -24,4 +24,9 @@ public class InManufacturingState implements ManufacturingState {
             proc.setState(new FailedState());
         }
     }
+
+    @Override
+    public String getStateName(ManufacturingProcess process) {
+        return "In Manufacturing";
+    }
 }

@@ -13,4 +13,9 @@ public class CompletedState implements ManufacturingState {
         Inventory.getInstance().addComponent(product);
         // No further action is needed, as the product is already in the inventory.
     }
+
+    @Override
+    public String getStateName(ManufacturingProcess process) {
+        return "Completed";
+    }
 }

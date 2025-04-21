@@ -27,4 +27,9 @@ public class WaitingForStockState implements ManufacturingState {
             proc.setState(new InManufacturingState());
         }
     }
+
+    @Override
+    public String getStateName(ManufacturingProcess process) {
+        return "Waiting For Stock";
+    }
 }
