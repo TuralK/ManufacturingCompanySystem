@@ -54,7 +54,6 @@ public class CSVLoader {
             String[] headers = headerLine.split(";");
             // The first column is product name, the last is quantity.
             List<String> componentNames = new ArrayList<>();
-            Inventory inv = Inventory.getInstance();
             for (int i = 1; i < headers.length - 1; i++) {
                 componentNames.add(headers[i].trim());
             }

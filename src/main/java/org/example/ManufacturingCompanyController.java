@@ -1,6 +1,3 @@
-/**
- * src/main/java/org/example/ManufacturingCompanyController.java
- */
 package org.example;
 
 import java.util.List;
@@ -8,15 +5,15 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Acts as the central orchestration component for the manufacturing application.
+ * Acts as the controller for the manufacturing company.
  * 
  * <p>
- * Responsibilities:
+ * The responsibilities of the controller are:
  * <ul>
- *   <li>Load raw materials and product definitions from CSV files.</li>
- *   <li>Initialize inventory with loaded components.</li>
- *   <li>Delegate manufacturing execution to ManufacturingService.</li>
- *   <li>Delegate reporting to ReportService.</li>
+ *   <li>Load raw materials and product definitions from CSV files with {@link CSVDataLoader}.</li>
+ *   <li>Initialize {@link Inventory} singleton with loaded components.</li>
+ *   <li>Delegate manufacturing of all products to {@link ManufacturingService}.</li>
+ *   <li>Delegate printing out inventory status and final report to {@link ReportService}.</li>
  * </ul>
  * </p>
  * 
@@ -31,7 +28,7 @@ public class ManufacturingCompanyController {
     private final ReportService reporter;
 
     /**
-     * Constructs the controller by loading data and preparing services.
+     * Constructs the controller by loading data from resource files and preparing all services.
      *
      * @param componentsCsv the filename (relative to resources) for component definitions
      * @param productsCsv   the filename (relative to resources) for product definitions
@@ -53,17 +50,15 @@ public class ManufacturingCompanyController {
         this.products = loader.loadProducts(lookup);
 
         // Initialize service and report handlers
-        this.service   = new ManufacturingService(inventory);
+        this.service   = new ManufacturingService();
         this.reporter  = new ReportService(inventory);
     }
 
     /**
-     * Executes the end-to-end manufacturing workflow:
-     * <ol>
-     *   <li>Run production on each product.</li>
-     *   <li>Print inventory details and process states.</li>
-     *   <li>Print final summary report.</li>
-     * </ol>
+     * Executes the end-to-end manufacturing workflow 
+     * by running the manufacturing process on 
+     * each product and printing inventory details,
+     * process states and the final summary report.
      */
     public void run() {
         // Execute manufacturing processes for all products
