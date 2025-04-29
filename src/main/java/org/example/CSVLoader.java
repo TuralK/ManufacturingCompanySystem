@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * CSVLoader provides static methods to load components and products from CSV files.
  */
-class CSVLoader {
+public class CSVLoader {
 
     // Loads components from a CSV file located in the resources folder.
     public static List<BasicComponent> loadComponents(String filename) {
@@ -44,7 +44,7 @@ class CSVLoader {
     }
 
     // Loads products from a CSV file located in the resources folder.
-    public static List<Product> loadProducts(String filename) {
+    public static List<Product> loadProducts(String filename, Map<String, Component> componentLookup) {
         List<Product> products = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader("src/main/resources/" + filename))) {
             String line;
@@ -62,7 +62,7 @@ class CSVLoader {
                 String[] tokens = line.split(";");
                 if (tokens.length < 2) continue;
                 String productName = tokens[0].trim();
-                Map<String, Double> requirements = new HashMap<>();
+                Map<Component, Double> requirements = new HashMap<>();
                 // For each component column, parse the required quantity.
                 for (int i = 1; i < tokens.length - 1; i++) {
                     String value = tokens[i].trim();
@@ -71,7 +71,8 @@ class CSVLoader {
                     // Only add if the required quantity is greater than zero.
                     if (reqQuantity > 0) {
                         String compName = componentNames.get(i - 1);
-                        requirements.put(compName, reqQuantity);
+                        Component comp = componentLookup.get(compName);
+                        requirements.put(comp, reqQuantity);
                     }
                 }
                 // Last column is the manufacturing quantity.
