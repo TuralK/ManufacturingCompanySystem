@@ -165,7 +165,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 👥 Contributors
 
-- [Mehmet Anıl Cömert]((https://github.com/MehmetAnilcomert))
+- [Mehmet Anıl Cömert](https://github.com/MehmetAnilcomert)
 - [Atahan Serhat İşbakan](https://github.com/ModestSerhat)
 - [Tural Karimli](https://github.com/TuralK)
 
